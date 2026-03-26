@@ -1,0 +1,1630 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude 完全解説マニュアル 2026年版</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=Inter:wght@300;400;500;600;700&display=swap');
+
+  :root {
+    --primary: #6C5CE7;
+    --primary-light: #A29BFE;
+    --primary-dark: #4834D4;
+    --accent: #FF6B6B;
+    --accent-light: #FFA8A8;
+    --teal: #00B894;
+    --teal-light: #55EFC4;
+    --orange: #FDCB6E;
+    --dark: #2D3436;
+    --gray: #636E72;
+    --light-gray: #DFE6E9;
+    --bg: #FAFBFC;
+    --card-bg: #FFFFFF;
+    --gradient-hero: linear-gradient(135deg, #6C5CE7 0%, #A29BFE 50%, #74B9FF 100%);
+    --gradient-accent: linear-gradient(135deg, #FF6B6B 0%, #FDCB6E 100%);
+    --gradient-teal: linear-gradient(135deg, #00B894 0%, #55EFC4 100%);
+    --shadow: 0 4px 24px rgba(0,0,0,0.06);
+    --shadow-hover: 0 8px 40px rgba(0,0,0,0.12);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans JP', 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--dark);
+    line-height: 1.9;
+    font-size: 15px;
+  }
+
+  /* ========== HERO ========== */
+  .hero {
+    background: var(--gradient-hero);
+    color: white;
+    padding: 80px 40px 60px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 30% 70%, rgba(255,255,255,0.08) 0%, transparent 50%),
+                radial-gradient(circle at 70% 30%, rgba(255,255,255,0.05) 0%, transparent 50%);
+    animation: float 20s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(-20px, 20px); }
+  }
+  .hero h1 {
+    font-size: 2.8em;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    position: relative;
+    z-index: 1;
+  }
+  .hero .subtitle {
+    font-size: 1.15em;
+    opacity: 0.9;
+    margin-top: 12px;
+    font-weight: 300;
+    position: relative;
+    z-index: 1;
+  }
+  .hero .badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.2);
+    backdrop-filter: blur(10px);
+    padding: 6px 20px;
+    border-radius: 100px;
+    font-size: 0.85em;
+    margin-top: 20px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ========== LAYOUT ========== */
+  .container {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ========== TOC ========== */
+  .toc {
+    background: white;
+    border-radius: 16px;
+    padding: 36px 40px;
+    margin: -30px auto 40px;
+    max-width: 920px;
+    position: relative;
+    z-index: 2;
+    box-shadow: var(--shadow);
+  }
+  .toc h2 {
+    font-size: 1.3em;
+    margin-bottom: 16px;
+    color: var(--primary);
+  }
+  .toc-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 32px;
+  }
+  .toc a {
+    text-decoration: none;
+    color: var(--dark);
+    padding: 6px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.93em;
+    transition: color 0.2s;
+  }
+  .toc a:hover { color: var(--primary); }
+  .toc .num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 8px;
+    background: var(--gradient-hero);
+    color: white;
+    font-size: 0.75em;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  /* ========== SECTIONS ========== */
+  .section {
+    background: white;
+    border-radius: 16px;
+    padding: 44px 40px;
+    margin-bottom: 28px;
+    box-shadow: var(--shadow);
+    page-break-inside: avoid;
+  }
+  .section h2 {
+    font-size: 1.65em;
+    font-weight: 700;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section h2 .icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2em;
+    flex-shrink: 0;
+  }
+  .section h3 {
+    font-size: 1.15em;
+    color: var(--primary-dark);
+    margin: 28px 0 10px;
+    padding-left: 14px;
+    border-left: 3px solid var(--primary-light);
+  }
+  .section p { margin-bottom: 14px; }
+
+  .section-intro {
+    font-size: 0.95em;
+    color: var(--gray);
+    margin-bottom: 24px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--light-gray);
+  }
+
+  /* ========== DIAGRAM CARDS ========== */
+  .diagram-card {
+    background: linear-gradient(135deg, #F8F9FF 0%, #F0F3FF 100%);
+    border: 1px solid #E8ECFF;
+    border-radius: 14px;
+    padding: 28px;
+    margin: 20px 0;
+    text-align: center;
+  }
+  .diagram-card .caption {
+    font-size: 0.85em;
+    color: var(--gray);
+    margin-top: 14px;
+    font-style: italic;
+  }
+
+  /* ========== SCREENSHOT MOCK ========== */
+  .screenshot {
+    background: #1a1a2e;
+    border-radius: 12px;
+    overflow: hidden;
+    margin: 20px 0;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+  }
+  .screenshot .browser-bar {
+    background: #16213e;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .screenshot .dot {
+    width: 12px; height: 12px; border-radius: 50%;
+  }
+  .screenshot .dot.r { background: #ff5f57; }
+  .screenshot .dot.y { background: #ffbd2e; }
+  .screenshot .dot.g { background: #28c940; }
+  .screenshot .browser-url {
+    background: #0f3460;
+    color: #a5b4c8;
+    padding: 4px 14px;
+    border-radius: 6px;
+    font-size: 0.78em;
+    margin-left: 12px;
+    flex-grow: 1;
+  }
+  .screenshot .screen {
+    padding: 24px;
+  }
+  .screenshot .caption {
+    background: rgba(255,255,255,0.04);
+    color: #a5b4c8;
+    padding: 10px 16px;
+    font-size: 0.82em;
+    text-align: center;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+
+  /* ========== FEATURE GRID ========== */
+  .feature-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 20px 0;
+  }
+  .feature-card {
+    background: var(--bg);
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid var(--light-gray);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .feature-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
+  .feature-card .fc-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1em;
+    margin-bottom: 10px;
+  }
+  .feature-card h4 { font-size: 0.98em; margin-bottom: 6px; }
+  .feature-card p { font-size: 0.85em; color: var(--gray); margin: 0; line-height: 1.6; }
+
+  /* ========== INFO BOX ========== */
+  .info-box {
+    border-radius: 12px;
+    padding: 18px 22px;
+    margin: 18px 0;
+    font-size: 0.92em;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .info-box.tip { background: #E8FFF3; border-left: 4px solid var(--teal); }
+  .info-box.warn { background: #FFF8E1; border-left: 4px solid var(--orange); }
+  .info-box.note { background: #F0F3FF; border-left: 4px solid var(--primary-light); }
+  .info-box .ib-icon { font-size: 1.3em; flex-shrink: 0; }
+
+  /* ========== TABLE ========== */
+  .styled-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 18px 0;
+    font-size: 0.9em;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--light-gray);
+  }
+  .styled-table th {
+    background: var(--gradient-hero);
+    color: white;
+    padding: 12px 16px;
+    text-align: left;
+    font-weight: 600;
+  }
+  .styled-table td {
+    padding: 11px 16px;
+    border-bottom: 1px solid #F0F0F0;
+  }
+  .styled-table tr:last-child td { border-bottom: none; }
+  .styled-table tr:nth-child(even) td { background: #FAFBFC; }
+
+  /* ========== FLOW CHART ========== */
+  .flow-steps {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    margin: 24px 0;
+    flex-wrap: wrap;
+  }
+  .flow-step {
+    background: white;
+    border: 2px solid var(--primary-light);
+    border-radius: 12px;
+    padding: 14px 20px;
+    text-align: center;
+    font-size: 0.88em;
+    font-weight: 500;
+    min-width: 120px;
+  }
+  .flow-step .step-num {
+    display: block;
+    font-size: 0.72em;
+    color: var(--primary);
+    margin-bottom: 4px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .flow-arrow {
+    font-size: 1.5em;
+    color: var(--primary-light);
+    margin: 0 6px;
+  }
+
+  /* ========== COMPARE ========== */
+  .compare-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    margin: 20px 0;
+  }
+  .compare-card {
+    border-radius: 14px;
+    padding: 24px 20px;
+    text-align: center;
+    color: white;
+    position: relative;
+    overflow: hidden;
+  }
+  .compare-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(255,255,255,0.05);
+    border-radius: inherit;
+  }
+  .compare-card h4 { font-size: 1.15em; margin-bottom: 8px; position: relative; }
+  .compare-card p { font-size: 0.82em; opacity: 0.9; position: relative; margin: 0; line-height: 1.6; }
+  .compare-card.opus { background: linear-gradient(135deg, #6C5CE7, #4834D4); }
+  .compare-card.sonnet { background: linear-gradient(135deg, #0984E3, #74B9FF); }
+  .compare-card.haiku { background: linear-gradient(135deg, #00B894, #55EFC4); color: var(--dark); }
+
+  /* ========== TAGS ========== */
+  .tag {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-size: 0.78em;
+    font-weight: 600;
+    margin: 2px;
+  }
+  .tag.new { background: #E8FFF3; color: #00B894; }
+  .tag.pro { background: #FFF0F0; color: #FF6B6B; }
+  .tag.free { background: #F0F3FF; color: #6C5CE7; }
+
+  /* ========== KEYBOARD ========== */
+  kbd {
+    background: #F0F0F0;
+    border: 1px solid #D0D0D0;
+    border-radius: 4px;
+    padding: 2px 7px;
+    font-size: 0.82em;
+    font-family: 'Inter', monospace;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+  }
+
+  /* ========== CODE ========== */
+  code {
+    background: #F4F3FF;
+    color: var(--primary-dark);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.88em;
+  }
+
+  .code-block {
+    background: #1E1E2E;
+    color: #CDD6F4;
+    border-radius: 10px;
+    padding: 18px 22px;
+    margin: 16px 0;
+    font-family: 'Fira Code', 'SF Mono', monospace;
+    font-size: 0.85em;
+    line-height: 1.7;
+    overflow-x: auto;
+  }
+  .code-block .comment { color: #6C7086; }
+  .code-block .keyword { color: #CBA6F7; }
+  .code-block .string { color: #A6E3A1; }
+  .code-block .func { color: #89B4FA; }
+
+  /* ========== FOOTER ========== */
+  .footer {
+    text-align: center;
+    padding: 40px;
+    color: var(--gray);
+    font-size: 0.85em;
+  }
+
+  /* ========== PRINT ========== */
+  @media print {
+    body { font-size: 13px; }
+    .hero { padding: 40px 20px 30px; }
+    .section { box-shadow: none; border: 1px solid #eee; }
+    .toc { box-shadow: none; border: 1px solid #eee; }
+  }
+
+  /* ========== ICON COLORS ========== */
+  .icon-purple { background: linear-gradient(135deg, #6C5CE7, #A29BFE); color: white; }
+  .icon-red { background: linear-gradient(135deg, #FF6B6B, #FFA8A8); color: white; }
+  .icon-teal { background: linear-gradient(135deg, #00B894, #55EFC4); color: white; }
+  .icon-blue { background: linear-gradient(135deg, #0984E3, #74B9FF); color: white; }
+  .icon-orange { background: linear-gradient(135deg, #E17055, #FDCB6E); color: white; }
+  .icon-pink { background: linear-gradient(135deg, #FD79A8, #FDCB6E); color: white; }
+  .icon-dark { background: linear-gradient(135deg, #2D3436, #636E72); color: white; }
+
+  /* progress bar */
+  .progress-bar {
+    height: 6px; border-radius: 3px; background: #eee; margin: 8px 0; overflow: hidden;
+  }
+  .progress-bar .fill {
+    height: 100%; border-radius: 3px;
+  }
+
+  .stat-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 20px 0;
+  }
+  .stat-card {
+    background: var(--bg); border-radius: 12px; padding: 18px; text-align: center;
+    border: 1px solid var(--light-gray);
+  }
+  .stat-card .stat-num { font-size: 1.6em; font-weight: 700; color: var(--primary); }
+  .stat-card .stat-label { font-size: 0.78em; color: var(--gray); margin-top: 4px; }
+</style>
+</head>
+<body>
+
+<!-- ==================== HERO ==================== -->
+<div class="hero">
+  <h1>Claude 完全解説マニュアル</h1>
+  <p class="subtitle">Anthropic の AI アシスタント — 全機能を徹底図解</p>
+  <span class="badge">2026年3月 最新版 ・ 約20,000字</span>
+</div>
+
+<!-- ==================== TOC ==================== -->
+<div class="container">
+<div class="toc">
+  <h2>📑 目次</h2>
+  <div class="toc-grid">
+    <a href="#ch1"><span class="num">1</span>Claude とは？— 全体像を掴む</a>
+    <a href="#ch2"><span class="num">2</span>モデルラインナップ 2026</a>
+    <a href="#ch3"><span class="num">3</span>Webチャット（claude.ai）</a>
+    <a href="#ch4"><span class="num">4</span>プロジェクト機能</a>
+    <a href="#ch5"><span class="num">5</span>アーティファクト機能</a>
+    <a href="#ch6"><span class="num">6</span>ファイル＆画像の入力</a>
+    <a href="#ch7"><span class="num">7</span>Web検索 ＆ リアルタイム情報</a>
+    <a href="#ch8"><span class="num">8</span>Claude Code（CLI）</a>
+    <a href="#ch9"><span class="num">9</span>Cowork モード</a>
+    <a href="#ch10"><span class="num">10</span>API ＆ 開発者向け機能</a>
+    <a href="#ch11"><span class="num">11</span>MCP（外部接続）</a>
+    <a href="#ch12"><span class="num">12</span>料金プラン比較</a>
+    <a href="#ch13"><span class="num">13</span>セキュリティ＆プライバシー</a>
+    <a href="#ch14"><span class="num">14</span>活用Tips ＆ 便利テクニック</a>
+  </div>
+</div>
+
+<!-- ==================== CH1 ==================== -->
+<div class="section" id="ch1">
+  <h2><span class="icon icon-purple">🤖</span> 第1章：Claude とは？— 全体像を掴む</h2>
+  <p class="section-intro">Anthropic社が開発した次世代AIアシスタント「Claude」。安全性と有用性を両立させた設計思想で、世界中のビジネス・クリエイティブシーンで活用されています。</p>
+
+  <p>Claudeは、Anthropic（アンソロピック）社が開発・提供する大規模言語モデル（LLM）ベースのAIアシスタントです。Google出身のAI研究者であるDario Amodei、Daniela Amodeiらによって2021年に設立されたAnthropicは、「AIの安全性」を最重要ミッションに掲げています。Claudeはその理念を体現するプロダクトであり、単に「賢いAI」ではなく「信頼できるAI」として設計されています。</p>
+
+  <p>Claudeの最大の特徴は、長文の理解力、正確な指示追従、そして誠実さです。わからないことは「わからない」と答え、危険なリクエストには丁寧に断りを入れる。この一貫した姿勢が、多くのビジネスユーザーから高い信頼を得ています。</p>
+
+  <!-- DIAGRAM: Claude Ecosystem -->
+  <div class="diagram-card">
+    <svg viewBox="0 0 800 380" xmlns="http://www.w3.org/2000/svg" style="max-width:700px;width:100%;">
+      <!-- Center circle -->
+      <defs>
+        <linearGradient id="gPurple" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#6C5CE7"/><stop offset="100%" stop-color="#A29BFE"/></linearGradient>
+        <linearGradient id="gBlue" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0984E3"/><stop offset="100%" stop-color="#74B9FF"/></linearGradient>
+        <linearGradient id="gTeal" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#00B894"/><stop offset="100%" stop-color="#55EFC4"/></linearGradient>
+        <linearGradient id="gRed" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#FF6B6B"/><stop offset="100%" stop-color="#FFA8A8"/></linearGradient>
+        <linearGradient id="gOrange" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#E17055"/><stop offset="100%" stop-color="#FDCB6E"/></linearGradient>
+        <filter id="shadow1"><feDropShadow dx="0" dy="2" stdDeviation="4" flood-opacity="0.12"/></filter>
+      </defs>
+      <!-- Center -->
+      <circle cx="400" cy="190" r="68" fill="url(#gPurple)" filter="url(#shadow1)"/>
+      <text x="400" y="185" text-anchor="middle" fill="white" font-size="22" font-weight="700" font-family="Noto Sans JP">Claude</text>
+      <text x="400" y="208" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="11" font-family="Noto Sans JP">AI アシスタント</text>
+      <!-- Nodes -->
+      <line x1="340" y1="155" x2="200" y2="80" stroke="#A29BFE" stroke-width="2" stroke-dasharray="6,4"/>
+      <rect x="110" y="50" width="130" height="58" rx="14" fill="url(#gBlue)" filter="url(#shadow1)"/>
+      <text x="175" y="76" text-anchor="middle" fill="white" font-size="13" font-weight="600" font-family="Noto Sans JP">🌐 Webチャット</text>
+      <text x="175" y="94" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="10" font-family="Noto Sans JP">claude.ai</text>
+
+      <line x1="460" y1="155" x2="600" y2="80" stroke="#A29BFE" stroke-width="2" stroke-dasharray="6,4"/>
+      <rect x="540" y="50" width="130" height="58" rx="14" fill="url(#gTeal)" filter="url(#shadow1)"/>
+      <text x="605" y="76" text-anchor="middle" fill="white" font-size="13" font-weight="600" font-family="Noto Sans JP">💻 Claude Code</text>
+      <text x="605" y="94" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="10" font-family="Noto Sans JP">CLI ターミナル</text>
+
+      <line x1="340" y1="230" x2="200" y2="300" stroke="#A29BFE" stroke-width="2" stroke-dasharray="6,4"/>
+      <rect x="110" y="272" width="130" height="58" rx="14" fill="url(#gRed)" filter="url(#shadow1)"/>
+      <text x="175" y="298" text-anchor="middle" fill="white" font-size="13" font-weight="600" font-family="Noto Sans JP">📱 モバイル</text>
+      <text x="175" y="316" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="10" font-family="Noto Sans JP">iOS / Android</text>
+
+      <line x1="460" y1="230" x2="600" y2="300" stroke="#A29BFE" stroke-width="2" stroke-dasharray="6,4"/>
+      <rect x="540" y="272" width="130" height="58" rx="14" fill="url(#gOrange)" filter="url(#shadow1)"/>
+      <text x="605" y="298" text-anchor="middle" fill="white" font-size="13" font-weight="600" font-family="Noto Sans JP">🔌 API</text>
+      <text x="605" y="316" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="10" font-family="Noto Sans JP">開発者向け</text>
+
+      <line x1="400" y1="260" x2="400" y2="320" stroke="#A29BFE" stroke-width="2" stroke-dasharray="6,4"/>
+      <rect x="335" y="322" width="130" height="50" rx="14" fill="url(#gPurple)" filter="url(#shadow1)"/>
+      <text x="400" y="347" text-anchor="middle" fill="white" font-size="13" font-weight="600" font-family="Noto Sans JP">🖥️ Cowork</text>
+      <text x="400" y="363" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="10" font-family="Noto Sans JP">デスクトップ</text>
+    </svg>
+    <div class="caption">図1-1：Claude エコシステム全体図 — 1つのAIに複数のアクセス方法が用意されている</div>
+  </div>
+
+  <h3>Claude でできること</h3>
+  <div class="feature-grid">
+    <div class="feature-card">
+      <div class="fc-icon icon-purple">📝</div>
+      <h4>文章の作成・校正・翻訳</h4>
+      <p>ブログ記事、ビジネスメール、契約書の下書きから、多言語翻訳まで高品質な文章を生成します。</p>
+    </div>
+    <div class="feature-card">
+      <div class="fc-icon icon-blue">💻</div>
+      <h4>コーディング支援</h4>
+      <p>コード生成、バグ修正、リファクタリング、テスト作成。Python、JavaScript、TypeScript など主要言語に対応。</p>
+    </div>
+    <div class="feature-card">
+      <div class="fc-icon icon-teal">📊</div>
+      <h4>データ分析・可視化</h4>
+      <p>CSV・Excel ファイルの分析、グラフ作成、統計処理。ビジネスインサイトの抽出も得意です。</p>
+    </div>
+    <div class="feature-card">
+      <div class="fc-icon icon-red">📄</div>
+      <h4>ドキュメント処理</h4>
+      <p>PDF・Word・画像の読み取り、要約、変換。100ページ超の長文ドキュメントも正確に処理します。</p>
+    </div>
+    <div class="feature-card">
+      <div class="fc-icon icon-orange">🎨</div>
+      <h4>クリエイティブ制作</h4>
+      <p>小説、脚本、広告コピー、SNS投稿。ブランドトーンに合わせた創作が可能です。</p>
+    </div>
+    <div class="feature-card">
+      <div class="fc-icon icon-pink">🔍</div>
+      <h4>リサーチ・調査</h4>
+      <p>Web検索と組み合わせた最新情報の調査。複雑な問いに対して論理的な回答を提供します。</p>
+    </div>
+  </div>
+
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="stat-num">200K+</div>
+      <div class="stat-label">コンテキスト<br>ウィンドウ(トークン)</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">1M</div>
+      <div class="stat-label">拡張コンテキスト<br>(Opus)</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">100+</div>
+      <div class="stat-label">対応言語数</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">24/7</div>
+      <div class="stat-label">稼働時間</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== CH2 ==================== -->
+<div class="section" id="ch2">
+  <h2><span class="icon icon-blue">⚡</span> 第2章：モデルラインナップ 2026</h2>
+  <p class="section-intro">Claudeには用途別に最適化された3つのモデルファミリーがあります。目的に応じて使い分けることで、コストと性能のバランスを最適化できます。</p>
+
+  <div class="compare-cards">
+    <div class="compare-card opus">
+      <h4>👑 Opus 4.6</h4>
+      <p>最高知能モデル。複雑な推論、長文コーディング、高度な分析タスクに最適。1Mトークンの超大規模コンテキスト対応。</p>
+    </div>
+    <div class="compare-card sonnet">
+      <h4>⚖️ Sonnet 4.6</h4>
+      <p>知能と速度の最適バランス。日常的なタスクから専門的な作業まで幅広く対応。最もコスパに優れた選択肢。</p>
+    </div>
+    <div class="compare-card haiku">
+      <h4>🚀 Haiku 4.5</h4>
+      <p>最速・最軽量モデル。チャットボット、分類タスク、簡単な質問応答に最適。低コストで大量処理が可能。</p>
+    </div>
+  </div>
+
+  <table class="styled-table">
+    <thead>
+      <tr>
+        <th>項目</th>
+        <th>Opus 4.6</th>
+        <th>Sonnet 4.6</th>
+        <th>Haiku 4.5</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>API モデル名</strong></td><td>claude-opus-4-6</td><td>claude-sonnet-4-6</td><td>claude-haiku-4-5-20251001</td></tr>
+      <tr><td><strong>コンテキスト</strong></td><td>最大 1M トークン</td><td>200K トークン</td><td>200K トークン</td></tr>
+      <tr><td><strong>推論力</strong></td><td>⭐⭐⭐⭐⭐</td><td>⭐⭐⭐⭐</td><td>⭐⭐⭐</td></tr>
+      <tr><td><strong>速度</strong></td><td>★★★</td><td>★★★★</td><td>★★★★★</td></tr>
+      <tr><td><strong>コーディング</strong></td><td>最高精度</td><td>高精度</td><td>標準</td></tr>
+      <tr><td><strong>適した用途</strong></td><td>研究・複雑な開発</td><td>万能・日常業務</td><td>チャット・分類</td></tr>
+      <tr><td><strong>料金（入力/1Mトークン）</strong></td><td>$15</td><td>$3</td><td>$0.80</td></tr>
+      <tr><td><strong>料金（出力/1Mトークン）</strong></td><td>$75</td><td>$15</td><td>$4</td></tr>
+    </tbody>
+  </table>
+
+  <div class="info-box tip">
+    <span class="ib-icon">💡</span>
+    <div><strong>選び方のコツ：</strong>迷ったら Sonnet を選びましょう。80%以上のタスクで十分な性能を発揮します。コード品質やリサーチの正確さが特に重要な場面では Opus に切り替え、大量の単純処理には Haiku を使うのが最適な戦略です。</div>
+  </div>
+
+  <!-- model selection flow -->
+  <div class="diagram-card">
+    <svg viewBox="0 0 760 200" xmlns="http://www.w3.org/2000/svg" style="max-width:680px;width:100%;">
+      <rect x="20" y="70" width="160" height="60" rx="12" fill="#F0F3FF" stroke="#6C5CE7" stroke-width="2"/>
+      <text x="100" y="97" text-anchor="middle" fill="#2D3436" font-size="12" font-weight="600" font-family="Noto Sans JP">タスクの複雑さは？</text>
+      <text x="100" y="116" text-anchor="middle" fill="#636E72" font-size="10" font-family="Noto Sans JP">↓ 判断基準</text>
+
+      <line x1="180" y1="85" x2="260" y2="45" stroke="#6C5CE7" stroke-width="2"/>
+      <text x="215" y="55" fill="#6C5CE7" font-size="10" font-weight="600" font-family="Noto Sans JP">高い</text>
+      <rect x="260" y="20" width="130" height="50" rx="10" fill="url(#gPurple)" filter="url(#shadow1)"/>
+      <text x="325" y="42" text-anchor="middle" fill="white" font-size="13" font-weight="700" font-family="Noto Sans JP">👑 Opus</text>
+      <text x="325" y="58" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="9" font-family="Noto Sans JP">研究・高度分析</text>
+
+      <line x1="180" y1="100" x2="260" y2="100" stroke="#0984E3" stroke-width="2"/>
+      <text x="220" y="93" fill="#0984E3" font-size="10" font-weight="600" font-family="Noto Sans JP">中程度</text>
+      <rect x="260" y="76" width="130" height="50" rx="10" fill="url(#gBlue)" filter="url(#shadow1)"/>
+      <text x="325" y="98" text-anchor="middle" fill="white" font-size="13" font-weight="700" font-family="Noto Sans JP">⚖️ Sonnet</text>
+      <text x="325" y="114" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="9" font-family="Noto Sans JP">万能・推奨</text>
+
+      <line x1="180" y1="115" x2="260" y2="155" stroke="#00B894" stroke-width="2"/>
+      <text x="215" y="147" fill="#00B894" font-size="10" font-weight="600" font-family="Noto Sans JP">低い</text>
+      <rect x="260" y="132" width="130" height="50" rx="10" fill="url(#gTeal)" filter="url(#shadow1)"/>
+      <text x="325" y="154" text-anchor="middle" fill="white" font-size="13" font-weight="700" font-family="Noto Sans JP">🚀 Haiku</text>
+      <text x="325" y="170" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="9" font-family="Noto Sans JP">高速・大量処理</text>
+
+      <!-- Right side: examples -->
+      <line x1="390" y1="45" x2="450" y2="45" stroke="#A29BFE" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <rect x="450" y="12" width="280" height="65" rx="10" fill="#FAFBFC" stroke="#E8ECFF" stroke-width="1"/>
+      <text x="466" y="32" fill="#2D3436" font-size="10" font-family="Noto Sans JP">📌 論文分析、大規模コードリファクタリング</text>
+      <text x="466" y="48" fill="#2D3436" font-size="10" font-family="Noto Sans JP">📌 戦略立案、複雑な数学的推論</text>
+      <text x="466" y="64" fill="#2D3436" font-size="10" font-family="Noto Sans JP">📌 100ページ超の文書分析</text>
+
+      <line x1="390" y1="100" x2="450" y2="100" stroke="#74B9FF" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <rect x="450" y="75" width="280" height="50" rx="10" fill="#FAFBFC" stroke="#E8ECFF" stroke-width="1"/>
+      <text x="466" y="95" fill="#2D3436" font-size="10" font-family="Noto Sans JP">📌 メール作成、記事執筆、一般的なコーディング</text>
+      <text x="466" y="112" fill="#2D3436" font-size="10" font-family="Noto Sans JP">📌 データ分析、翻訳、要約</text>
+
+      <line x1="390" y1="157" x2="450" y2="157" stroke="#55EFC4" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <rect x="450" y="135" width="280" height="50" rx="10" fill="#FAFBFC" stroke="#E8ECFF" stroke-width="1"/>
+      <text x="466" y="155" fill="#2D3436" font-size="10" font-family="Noto Sans JP">📌 FAQ応答、テキスト分類、感情分析</text>
+      <text x="466" y="172" fill="#2D3436" font-size="10" font-family="Noto Sans JP">📌 データ抽出、キーワード検出</text>
+    </svg>
+    <div class="caption">図2-1：モデル選択フローチャート — タスクの複雑さに応じて最適なモデルを選ぶ</div>
+  </div>
+</div>
+
+<!-- ==================== CH3 ==================== -->
+<div class="section" id="ch3">
+  <h2><span class="icon icon-teal">🌐</span> 第3章：Webチャット（claude.ai）</h2>
+  <p class="section-intro">最も手軽にClaudeを使える方法。ブラウザから claude.ai にアクセスするだけで、すぐに会話を開始できます。</p>
+
+  <!-- Screenshot mock of claude.ai -->
+  <div class="screenshot">
+    <div class="browser-bar">
+      <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+      <div class="browser-url">🔒 claude.ai</div>
+    </div>
+    <div class="screen">
+      <svg viewBox="0 0 760 320" xmlns="http://www.w3.org/2000/svg" style="width:100%;">
+        <!-- Sidebar -->
+        <rect x="0" y="0" width="200" height="320" fill="#1a1a2e" rx="0"/>
+        <text x="20" y="30" fill="#a5b4c8" font-size="10" font-weight="600" font-family="Inter">RECENT CHATS</text>
+        <rect x="12" y="42" width="176" height="32" rx="6" fill="rgba(108,92,231,0.3)"/>
+        <text x="24" y="62" fill="white" font-size="11" font-family="Noto Sans JP">📄 マーケティング戦略の相談</text>
+        <rect x="12" y="80" width="176" height="32" rx="6" fill="transparent"/>
+        <text x="24" y="100" fill="#a5b4c8" font-size="11" font-family="Noto Sans JP">💻 Pythonコードレビュー</text>
+        <rect x="12" y="118" width="176" height="32" rx="6" fill="transparent"/>
+        <text x="24" y="138" fill="#a5b4c8" font-size="11" font-family="Noto Sans JP">📊 売上データ分析</text>
+        <rect x="12" y="156" width="176" height="32" rx="6" fill="transparent"/>
+        <text x="24" y="176" fill="#a5b4c8" font-size="11" font-family="Noto Sans JP">✍️ ブログ記事の下書き</text>
+
+        <!-- Main area -->
+        <rect x="200" y="0" width="560" height="320" fill="#0f0f23"/>
+
+        <!-- User message -->
+        <rect x="420" y="20" width="320" height="50" rx="12" fill="rgba(108,92,231,0.25)"/>
+        <text x="435" y="42" fill="white" font-size="11.5" font-family="Noto Sans JP">来月のSNSキャンペーンの企画書を</text>
+        <text x="435" y="58" fill="white" font-size="11.5" font-family="Noto Sans JP">作成してください。ターゲットは20代女性です。</text>
+
+        <!-- Claude response -->
+        <circle cx="224" cy="100" r="14" fill="url(#gPurple)"/>
+        <text x="220" y="104" text-anchor="middle" fill="white" font-size="10" font-weight="700">C</text>
+        <rect x="248" y="86" width="380" height="150" rx="12" fill="rgba(255,255,255,0.06)"/>
+        <text x="264" y="108" fill="#CDD6F4" font-size="11.5" font-family="Noto Sans JP" font-weight="600">SNSキャンペーン企画書 📋</text>
+        <text x="264" y="128" fill="#a5b4c8" font-size="10.5" font-family="Noto Sans JP">■ キャンペーン名：「春のセルフケア30日チャレンジ」</text>
+        <text x="264" y="146" fill="#a5b4c8" font-size="10.5" font-family="Noto Sans JP">■ 目的：ブランド認知度向上 + UGC獲得</text>
+        <text x="264" y="164" fill="#a5b4c8" font-size="10.5" font-family="Noto Sans JP">■ ターゲット：20代女性（美容・健康関心層）</text>
+        <text x="264" y="182" fill="#a5b4c8" font-size="10.5" font-family="Noto Sans JP">■ プラットフォーム：Instagram / TikTok / X</text>
+        <text x="264" y="200" fill="#a5b4c8" font-size="10.5" font-family="Noto Sans JP">■ 期間：4月1日〜4月30日</text>
+        <text x="264" y="220" fill="#a5b4c8" font-size="10.5" font-family="Noto Sans JP">■ KPI：投稿数 500件 / リーチ 100万...</text>
+
+        <!-- Input area -->
+        <rect x="220" y="270" width="520" height="38" rx="20" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+        <text x="245" y="293" fill="#636E72" font-size="11.5" font-family="Noto Sans JP">メッセージを入力... 📎 🖼️ 🔍</text>
+      </svg>
+    </div>
+    <div class="caption">図3-1：claude.ai のチャット画面 — 左にチャット履歴、中央に会話エリア、下部に入力欄</div>
+  </div>
+
+  <h3>基本的な使い方</h3>
+  <p>claude.ai にアクセスし、Googleアカウントまたはメールアドレスでサインアップするだけで利用開始できます。無料プランでも Sonnet モデルが使え、基本的な対話・文章生成・コーディング支援が可能です。</p>
+
+  <p>チャット画面のUIはシンプルで直感的です。左サイドバーにチャット履歴が並び、中央のメインエリアで会話が進行します。入力欄ではテキストの入力に加え、ファイルの添付、画像のアップロード、Web検索の指示なども行えます。</p>
+
+  <h3>チャット画面の主要UI要素</h3>
+  <div class="feature-grid">
+    <div class="feature-card">
+      <div class="fc-icon icon-purple">💬</div>
+      <h4>チャット履歴サイドバー</h4>
+      <p>過去の会話を一覧で管理。検索、名前変更、削除が可能。フォルダ分類でプロジェクト別に整理。</p>
+    </div>
+    <div class="feature-card">
+      <div class="fc-icon icon-blue">📎</div>
+      <h4>ファイル添付ボタン</h4>
+      <p>PDF、Word、Excel、画像、コードファイルをドラッグ＆ドロップまたはクリックで添付。最大ファイルサイズ制限あり。</p>
+    </div>
+    <div class="feature-card">
+      <div class="fc-icon icon-teal">🔄</div>
+      <h4>モデル切替メニュー</h4>
+      <p>会話の途中でもモデルを切り替え可能。Opus / Sonnet / Haiku をワンクリックで変更。</p>
+    </div>
+    <div class="feature-card">
+      <div class="fc-icon icon-orange">🔍</div>
+      <h4>Web検索トグル</h4>
+      <p>最新情報が必要な質問では、Web検索を有効化して回答精度を高められます。</p>
+    </div>
+  </div>
+
+  <div class="info-box note">
+    <span class="ib-icon">📌</span>
+    <div><strong>モバイルアプリも利用可能：</strong>iOS / Android 向けのClaudeアプリがApp StoreおよびGoogle Playで配信されています。外出先からでもPCと同じ機能がフルに使えます。音声入力にも対応しており、ハンズフリーでの対話も可能です。</div>
+  </div>
+</div>
+
+<!-- ==================== CH4 ==================== -->
+<div class="section" id="ch4">
+  <h2><span class="icon icon-orange">📁</span> 第4章：プロジェクト機能</h2>
+  <p class="section-intro">プロジェクト機能を使えば、関連するファイルやカスタム指示をあらかじめ登録し、専門的なAIアシスタントとして特化させることができます。</p>
+
+  <div class="diagram-card">
+    <svg viewBox="0 0 760 280" xmlns="http://www.w3.org/2000/svg" style="max-width:680px;width:100%;">
+      <!-- Project container -->
+      <rect x="180" y="10" width="400" height="260" rx="16" fill="#FAFBFC" stroke="#DFE6E9" stroke-width="2" stroke-dasharray="8,4"/>
+      <text x="380" y="38" text-anchor="middle" fill="#636E72" font-size="12" font-weight="600" font-family="Noto Sans JP">📁 プロジェクト「ECサイト開発」</text>
+
+      <!-- Knowledge files -->
+      <rect x="210" y="56" width="155" height="90" rx="10" fill="white" stroke="#A29BFE" stroke-width="1.5"/>
+      <text x="287" y="78" text-anchor="middle" fill="#6C5CE7" font-size="11" font-weight="600" font-family="Noto Sans JP">📚 ナレッジベース</text>
+      <text x="226" y="98" fill="#636E72" font-size="9.5" font-family="Noto Sans JP">📄 API仕様書.pdf</text>
+      <text x="226" y="114" fill="#636E72" font-size="9.5" font-family="Noto Sans JP">📄 コーディング規約.md</text>
+      <text x="226" y="130" fill="#636E72" font-size="9.5" font-family="Noto Sans JP">📄 デザインガイド.figma</text>
+
+      <!-- Custom instructions -->
+      <rect x="395" y="56" width="155" height="90" rx="10" fill="white" stroke="#00B894" stroke-width="1.5"/>
+      <text x="472" y="78" text-anchor="middle" fill="#00B894" font-size="11" font-weight="600" font-family="Noto Sans JP">⚙️ カスタム指示</text>
+      <text x="411" y="98" fill="#636E72" font-size="9.5" font-family="Noto Sans JP">「TypeScriptで回答して」</text>
+      <text x="411" y="114" fill="#636E72" font-size="9.5" font-family="Noto Sans JP">「ESLint準拠のコードを」</text>
+      <text x="411" y="130" fill="#636E72" font-size="9.5" font-family="Noto Sans JP">「テストコードも必ず添付」</text>
+
+      <!-- Chat threads -->
+      <rect x="240" y="170" width="110" height="40" rx="8" fill="url(#gBlue)"/>
+      <text x="295" y="194" text-anchor="middle" fill="white" font-size="10" font-weight="500" font-family="Noto Sans JP">💬 チャット1</text>
+      <rect x="370" y="170" width="110" height="40" rx="8" fill="url(#gBlue)"/>
+      <text x="425" y="194" text-anchor="middle" fill="white" font-size="10" font-weight="500" font-family="Noto Sans JP">💬 チャット2</text>
+
+      <text x="380" y="240" text-anchor="middle" fill="#636E72" font-size="10" font-family="Noto Sans JP">↑ すべてのチャットがナレッジ＆指示を共有</text>
+
+      <!-- Arrows -->
+      <line x1="287" y1="148" x2="287" y2="168" stroke="#A29BFE" stroke-width="1.5"/>
+      <line x1="472" y1="148" x2="430" y2="168" stroke="#00B894" stroke-width="1.5"/>
+    </svg>
+    <div class="caption">図4-1：プロジェクト構造 — ナレッジベースとカスタム指示をチャット間で共有</div>
+  </div>
+
+  <h3>プロジェクトの作り方</h3>
+  <p>claude.ai の左サイドバーから「新しいプロジェクト」をクリックすると作成画面が開きます。プロジェクト名を入力し、必要に応じてカスタム指示を設定します。カスタム指示とは「すべてのチャットに共通で適用される追加プロンプト」のことです。たとえば「回答は日本語で、敬語を使って」「Reactの最新バージョンを前提に」などの指示を登録しておけば、毎回書く手間が省けます。</p>
+
+  <h3>ナレッジベースの活用</h3>
+  <p>プロジェクトにはファイルをアップロードして「ナレッジベース」として登録できます。ここに登録したファイルは、そのプロジェクト内のすべてのチャットで参照されます。API仕様書、社内マニュアル、ブランドガイドライン、コーディング規約など、AIに理解してほしい情報を事前に登録することで、より的確な回答を得られます。</p>
+
+  <p>アップロードできるファイル形式は PDF、Word(.docx)、テキスト(.txt, .md)、コードファイル各種などです。1プロジェクトあたりの容量制限はプランによって異なります。</p>
+
+  <div class="info-box tip">
+    <span class="ib-icon">💡</span>
+    <div><strong>活用アイデア：</strong>「法律相談プロジェクト」に契約書テンプレートを登録、「ブログ執筆プロジェクト」にブランドガイドとペルソナ情報を登録、「開発プロジェクト」にコードベースのドキュメントを登録 — など、用途別に専門AIアシスタントを作り分けられます。</div>
+  </div>
+</div>
+
+<!-- ==================== CH5 ==================== -->
+<div class="section" id="ch5">
+  <h2><span class="icon icon-pink">✨</span> 第5章：アーティファクト機能</h2>
+  <p class="section-intro">コード、ドキュメント、ダイアグラムなどを独立したパネルに表示・プレビューする機能。チャットの流れを妨げず、成果物だけを集中して確認・編集できます。</p>
+
+  <div class="screenshot">
+    <div class="browser-bar">
+      <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+      <div class="browser-url">🔒 claude.ai — Artifact Preview</div>
+    </div>
+    <div class="screen">
+      <svg viewBox="0 0 760 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;">
+        <!-- Left: Chat -->
+        <rect x="0" y="0" width="340" height="260" fill="#0f0f23"/>
+        <text x="20" y="25" fill="#636E72" font-size="10" font-family="Noto Sans JP">チャットエリア</text>
+        <rect x="60" y="40" width="260" height="36" rx="10" fill="rgba(108,92,231,0.25)"/>
+        <text x="76" y="62" fill="white" font-size="10.5" font-family="Noto Sans JP">ダッシュボードのReactコンポーネントを作って</text>
+        <circle cx="30" cy="105" r="12" fill="url(#gPurple)"/>
+        <text x="27" y="109" fill="white" font-size="9" font-weight="700">C</text>
+        <text x="52" y="100" fill="#a5b4c8" font-size="10" font-family="Noto Sans JP">了解しました。ダッシュボードの</text>
+        <text x="52" y="116" fill="#a5b4c8" font-size="10" font-family="Noto Sans JP">Reactコンポーネントを作成します。</text>
+        <text x="52" y="132" fill="#a5b4c8" font-size="10" font-family="Noto Sans JP">右側のプレビューをご確認ください →</text>
+
+        <!-- Divider -->
+        <line x1="340" y1="0" x2="340" y2="260" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+
+        <!-- Right: Artifact -->
+        <rect x="340" y="0" width="420" height="260" fill="#1a1a2e"/>
+        <rect x="350" y="8" width="400" height="28" rx="6" fill="rgba(255,255,255,0.06)"/>
+        <text x="366" y="26" fill="#CDD6F4" font-size="10" font-weight="600" font-family="Noto Sans JP">📊 Dashboard.jsx</text>
+        <text x="660" y="26" fill="#a5b4c8" font-size="9" font-family="Inter">Preview | Code</text>
+
+        <!-- Mock dashboard preview -->
+        <rect x="360" y="46" width="380" height="200" rx="10" fill="#FAFBFC"/>
+        <text x="380" y="70" fill="#2D3436" font-size="12" font-weight="700" font-family="Noto Sans JP">📊 売上ダッシュボード</text>
+
+        <!-- Mini cards -->
+        <rect x="376" y="82" width="88" height="48" rx="6" fill="#6C5CE7"/>
+        <text x="420" y="102" text-anchor="middle" fill="white" font-size="8" font-family="Noto Sans JP">総売上</text>
+        <text x="420" y="120" text-anchor="middle" fill="white" font-size="12" font-weight="700">¥12.4M</text>
+
+        <rect x="472" y="82" width="88" height="48" rx="6" fill="#0984E3"/>
+        <text x="516" y="102" text-anchor="middle" fill="white" font-size="8" font-family="Noto Sans JP">注文数</text>
+        <text x="516" y="120" text-anchor="middle" fill="white" font-size="12" font-weight="700">1,847</text>
+
+        <rect x="568" y="82" width="88" height="48" rx="6" fill="#00B894"/>
+        <text x="612" y="102" text-anchor="middle" fill="white" font-size="8" font-family="Noto Sans JP">CVR</text>
+        <text x="612" y="120" text-anchor="middle" fill="white" font-size="12" font-weight="700">3.2%</text>
+
+        <rect x="664" y="82" width="66" height="48" rx="6" fill="#E17055"/>
+        <text x="697" y="102" text-anchor="middle" fill="white" font-size="8" font-family="Noto Sans JP">成長率</text>
+        <text x="697" y="120" text-anchor="middle" fill="white" font-size="11" font-weight="700">+18%</text>
+
+        <!-- Mini chart -->
+        <rect x="376" y="140" width="350" height="96" rx="6" fill="white" stroke="#eee" stroke-width="1"/>
+        <polyline points="390,220 420,200 450,210 480,185 510,190 540,170 570,175 600,155 630,160 660,140 690,150 710,145" fill="none" stroke="#6C5CE7" stroke-width="2"/>
+        <text x="390" y="158" fill="#636E72" font-size="8" font-family="Noto Sans JP">月間売上推移（2025年4月〜2026年3月）</text>
+      </svg>
+    </div>
+    <div class="caption">図5-1：アーティファクト画面 — 左にチャット、右にリアルタイムプレビューが表示される</div>
+  </div>
+
+  <h3>アーティファクトの種類</h3>
+  <table class="styled-table">
+    <thead>
+      <tr><th>種類</th><th>拡張子</th><th>特徴</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>React コンポーネント</strong></td><td>.jsx</td><td>インタラクティブなUIをその場でプレビュー。Tailwind CSS、recharts、D3等ライブラリ対応</td></tr>
+      <tr><td><strong>HTML</strong></td><td>.html</td><td>完全なWebページをプレビュー表示。JS・CSS をインラインで記述可能</td></tr>
+      <tr><td><strong>SVG</strong></td><td>.svg</td><td>ベクター図形・ダイアグラム・ロゴのプレビュー</td></tr>
+      <tr><td><strong>Mermaid</strong></td><td>.mermaid</td><td>フローチャート、シーケンス図、ER図などをコードから自動描画</td></tr>
+      <tr><td><strong>Markdown</strong></td><td>.md</td><td>書式付きドキュメントのプレビュー。レポート、記事の下書きに最適</td></tr>
+      <tr><td><strong>PDF</strong></td><td>.pdf</td><td>生成されたPDFのプレビュー表示</td></tr>
+    </tbody>
+  </table>
+
+  <div class="info-box warn">
+    <span class="ib-icon">⚠️</span>
+    <div><strong>注意点：</strong>アーティファクト内ではlocalStorage、sessionStorageなどのブラウザストレージAPIは使用できません。データの保持にはReact stateやJavaScript変数を使用してください。</div>
+  </div>
+
+  <h3>アーティファクトの操作</h3>
+  <p>生成されたアーティファクトは「コピー」ボタンでソースコードをクリップボードにコピーできます。また「ダウンロード」でローカルに保存も可能です。React コンポーネントの場合は「プレビュー」タブと「コード」タブを切り替えて、見た目とソースの両方を確認できます。さらに、チャット上で「ここの色を変えて」「グラフを棒グラフにして」と指示すれば、既存のアーティファクトを差分更新することも可能です。</p>
+</div>
+
+<!-- ==================== CH6 ==================== -->
+<div class="section" id="ch6">
+  <h2><span class="icon icon-red">📎</span> 第6章：ファイル ＆ 画像の入力</h2>
+  <p class="section-intro">Claudeはテキストだけでなく、PDF、Word、Excel、画像、コードファイルなど多様な形式のファイルを直接読み取って処理できます。</p>
+
+  <h3>対応ファイル形式</h3>
+  <table class="styled-table">
+    <thead>
+      <tr><th>カテゴリ</th><th>形式</th><th>できること</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>ドキュメント</strong></td><td>PDF, DOCX, TXT, MD, HTML, CSV</td><td>内容の読み取り、要約、分析、翻訳、質問応答</td></tr>
+      <tr><td><strong>画像</strong></td><td>PNG, JPG, GIF, WebP</td><td>画像認識、テキスト抽出(OCR)、画像内容の説明、図表の解析</td></tr>
+      <tr><td><strong>スプレッドシート</strong></td><td>XLSX, CSV, TSV</td><td>データ分析、統計処理、グラフ生成、クリーニング</td></tr>
+      <tr><td><strong>コード</strong></td><td>.py, .js, .ts, .java 等</td><td>コードレビュー、バグ特定、リファクタリング提案</td></tr>
+    </tbody>
+  </table>
+
+  <h3>画像認識（Vision）の威力</h3>
+  <p>Claudeはマルチモーダルモデルとして、画像の内容を高精度に認識・理解できます。たとえば、手書きのメモを撮影してアップロードすれば、テキストに書き起こし。UIのスクリーンショットをアップすれば、そのデザインのHTMLコードを生成。グラフ画像からデータを読み取って表にまとめることも可能です。</p>
+
+  <div class="diagram-card">
+    <svg viewBox="0 0 760 180" xmlns="http://www.w3.org/2000/svg" style="max-width:680px;width:100%;">
+      <!-- Input files -->
+      <rect x="30" y="30" width="80" height="100" rx="8" fill="#FF6B6B" opacity="0.15" stroke="#FF6B6B" stroke-width="1.5"/>
+      <text x="70" y="70" text-anchor="middle" fill="#FF6B6B" font-size="24">📄</text>
+      <text x="70" y="100" text-anchor="middle" fill="#2D3436" font-size="9" font-weight="600" font-family="Noto Sans JP">PDF</text>
+      <text x="70" y="115" text-anchor="middle" fill="#636E72" font-size="8" font-family="Noto Sans JP">100ページ対応</text>
+
+      <rect x="130" y="30" width="80" height="100" rx="8" fill="#0984E3" opacity="0.15" stroke="#0984E3" stroke-width="1.5"/>
+      <text x="170" y="70" text-anchor="middle" fill="#0984E3" font-size="24">🖼️</text>
+      <text x="170" y="100" text-anchor="middle" fill="#2D3436" font-size="9" font-weight="600" font-family="Noto Sans JP">画像</text>
+      <text x="170" y="115" text-anchor="middle" fill="#636E72" font-size="8" font-family="Noto Sans JP">OCR対応</text>
+
+      <rect x="230" y="30" width="80" height="100" rx="8" fill="#00B894" opacity="0.15" stroke="#00B894" stroke-width="1.5"/>
+      <text x="270" y="70" text-anchor="middle" fill="#00B894" font-size="24">📊</text>
+      <text x="270" y="100" text-anchor="middle" fill="#2D3436" font-size="9" font-weight="600" font-family="Noto Sans JP">Excel</text>
+      <text x="270" y="115" text-anchor="middle" fill="#636E72" font-size="8" font-family="Noto Sans JP">数式解析</text>
+
+      <!-- Arrow -->
+      <text x="360" y="85" text-anchor="middle" fill="#A29BFE" font-size="32">→</text>
+
+      <!-- Claude processing -->
+      <circle cx="460" cy="80" r="40" fill="url(#gPurple)" filter="url(#shadow1)"/>
+      <text x="460" y="76" text-anchor="middle" fill="white" font-size="16" font-weight="700">🧠</text>
+      <text x="460" y="96" text-anchor="middle" fill="rgba(255,255,255,0.9)" font-size="9" font-weight="600">Claude</text>
+
+      <!-- Arrow -->
+      <text x="550" y="85" text-anchor="middle" fill="#A29BFE" font-size="32">→</text>
+
+      <!-- Outputs -->
+      <rect x="600" y="20" width="140" height="120" rx="10" fill="#F0F3FF" stroke="#A29BFE" stroke-width="1.5"/>
+      <text x="670" y="45" text-anchor="middle" fill="#6C5CE7" font-size="11" font-weight="600" font-family="Noto Sans JP">🎯 出力</text>
+      <text x="618" y="65" fill="#2D3436" font-size="9.5" font-family="Noto Sans JP">✅ 要約・翻訳</text>
+      <text x="618" y="82" fill="#2D3436" font-size="9.5" font-family="Noto Sans JP">✅ データ分析結果</text>
+      <text x="618" y="99" fill="#2D3436" font-size="9.5" font-family="Noto Sans JP">✅ コードレビュー</text>
+      <text x="618" y="116" fill="#2D3436" font-size="9.5" font-family="Noto Sans JP">✅ 質問への回答</text>
+      <text x="618" y="133" fill="#2D3436" font-size="9.5" font-family="Noto Sans JP">✅ グラフ生成</text>
+    </svg>
+    <div class="caption">図6-1：ファイル入力→Claude処理→出力 のフロー図</div>
+  </div>
+
+  <div class="info-box tip">
+    <span class="ib-icon">💡</span>
+    <div><strong>プロのテクニック：</strong>複数のファイルを同時にアップロードして「このPDFとこのExcelのデータを照らし合わせて矛盾を見つけて」のようなクロスファイル分析も可能です。会議の議事録と前回のアクションアイテムを比較する、といった使い方が便利です。</div>
+  </div>
+</div>
+
+<!-- ==================== CH7 ==================== -->
+<div class="section" id="ch7">
+  <h2><span class="icon icon-blue">🔍</span> 第7章：Web検索 ＆ リアルタイム情報</h2>
+  <p class="section-intro">ClaudeのWeb検索機能を使えば、学習データのカットオフ日以降の最新情報もリアルタイムで取得して回答に反映できます。</p>
+
+  <p>Claudeは膨大な学習データを持っていますが、それには時間的な限界（カットオフ日）があります。「今日のニュース」「最新の株価」「先週発表された新製品」などの情報は、Web検索を使わなければ正確に回答できません。</p>
+
+  <p>Web検索はclaude.ai のチャットで自動的に有効化される場合と、ユーザーが明示的にONにする場合があります。Claudeは質問の内容から「これは最新情報が必要だ」と判断すると、自動的にWebを検索してから回答を生成します。</p>
+
+  <div class="flow-steps">
+    <div class="flow-step">
+      <span class="step-num">Step 1</span>
+      ユーザーが質問
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step">
+      <span class="step-num">Step 2</span>
+      最新情報が必要？
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step" style="border-color:#00B894;">
+      <span class="step-num" style="color:#00B894;">Step 3</span>
+      Web検索を実行
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step" style="border-color:#FF6B6B;">
+      <span class="step-num" style="color:#FF6B6B;">Step 4</span>
+      検索結果を統合
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step">
+      <span class="step-num">Step 5</span>
+      回答を生成
+    </div>
+  </div>
+
+  <h3>Web検索の特徴</h3>
+  <div class="feature-grid">
+    <div class="feature-card">
+      <div class="fc-icon icon-blue">🌐</div>
+      <h4>自動判定</h4>
+      <p>「現在の」「最新の」「今日の」といったキーワードを含む質問では、Claudeが自動的にWeb検索を実行します。</p>
+    </div>
+    <div class="feature-card">
+      <div class="fc-icon icon-teal">📚</div>
+      <h4>ソース引用</h4>
+      <p>Web検索を使った回答には、情報のソースURLが引用として付記されます。根拠を確認したいときに便利です。</p>
+    </div>
+    <div class="feature-card">
+      <div class="fc-icon icon-purple">🎯</div>
+      <h4>複数ソース統合</h4>
+      <p>複数のWebページから情報を収集し、一つにまとめて整理された回答を生成します。手動検索より効率的です。</p>
+    </div>
+    <div class="feature-card">
+      <div class="fc-icon icon-orange">⚡</div>
+      <h4>リアルタイム性</h4>
+      <p>ニュース、株価、天気予報、イベント情報など、常に変動する情報にアクセスできます。</p>
+    </div>
+  </div>
+
+  <div class="info-box warn">
+    <span class="ib-icon">⚠️</span>
+    <div><strong>注意：</strong>Web検索結果はあくまで参考情報です。重要な意思決定の際は、必ず一次情報源を自分の目で確認してください。Claudeは検索結果の正確性を100%保証するものではありません。</div>
+  </div>
+</div>
+
+<!-- ==================== CH8 ==================== -->
+<div class="section" id="ch8">
+  <h2><span class="icon icon-dark">⌨️</span> 第8章：Claude Code（CLI）</h2>
+  <p class="section-intro">開発者のためのコマンドラインツール。ターミナルから直接Claudeに指示を出し、ファイルの作成・編集・テスト実行までを一気通貫で自動化できます。</p>
+
+  <div class="screenshot">
+    <div class="browser-bar">
+      <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+      <div class="browser-url">Terminal — ~/projects/my-app</div>
+    </div>
+    <div class="screen">
+      <svg viewBox="0 0 760 240" xmlns="http://www.w3.org/2000/svg" style="width:100%;">
+        <rect x="0" y="0" width="760" height="240" fill="#1E1E2E"/>
+        <text x="20" y="28" fill="#89B4FA" font-size="12" font-family="monospace">$ claude</text>
+        <text x="20" y="50" fill="#A6E3A1" font-size="11" font-family="monospace">╭──────────────────────────────────────────────╮</text>
+        <text x="20" y="68" fill="#A6E3A1" font-size="11" font-family="monospace">│  Claude Code v1.0  ・ Model: Opus 4.6       │</text>
+        <text x="20" y="86" fill="#A6E3A1" font-size="11" font-family="monospace">╰──────────────────────────────────────────────╯</text>
+        <text x="20" y="112" fill="#CBA6F7" font-size="11" font-family="monospace">You:</text>
+        <text x="65" y="112" fill="#CDD6F4" font-size="11" font-family="monospace">ユーザー認証機能をJWTベースで実装して。テストも書いて。</text>
+        <text x="20" y="138" fill="#89B4FA" font-size="11" font-family="monospace">Claude:</text>
+        <text x="85" y="138" fill="#CDD6F4" font-size="11" font-family="monospace">了解しました。以下の手順で実装します：</text>
+        <text x="85" y="158" fill="#6C7086" font-size="11" font-family="monospace">1. auth/middleware.ts を作成中...</text>
+        <text x="85" y="176" fill="#6C7086" font-size="11" font-family="monospace">2. auth/jwt.service.ts を作成中...</text>
+        <text x="85" y="194" fill="#6C7086" font-size="11" font-family="monospace">3. tests/auth.test.ts を作成中...</text>
+        <text x="85" y="214" fill="#A6E3A1" font-size="11" font-family="monospace">✓ 3 files created, 2 files modified. Tests: 12/12 passed</text>
+      </svg>
+    </div>
+    <div class="caption">図8-1：Claude Code のターミナル画面 — 自然言語で指示するとファイルの作成・編集を自動実行</div>
+  </div>
+
+  <h3>Claude Code の主な特徴</h3>
+  <div class="feature-grid">
+    <div class="feature-card">
+      <div class="fc-icon icon-dark">📂</div>
+      <h4>プロジェクト全体を理解</h4>
+      <p>ファイル構造、依存関係、既存コードを自動で解析。プロジェクトのコンテキストを把握した上で修正を提案します。</p>
+    </div>
+    <div class="feature-card">
+      <div class="fc-icon icon-purple">🔧</div>
+      <h4>ファイル作成・編集</h4>
+      <p>新規ファイルの作成、既存ファイルの編集をコマンドラインから直接実行。差分をプレビューして確認も可能。</p>
+    </div>
+    <div class="feature-card">
+      <div class="fc-icon icon-teal">🧪</div>
+      <h4>テスト＆ビルド実行</h4>
+      <p>テストの作成・実行、ビルドプロセスの管理。エラーが出れば自動で修正を提案・実行します。</p>
+    </div>
+    <div class="feature-card">
+      <div class="fc-icon icon-blue">🔀</div>
+      <h4>Git連携</h4>
+      <p>コミット、ブランチ作成、PR作成まで対応。適切なコミットメッセージの自動生成も行います。</p>
+    </div>
+  </div>
+
+  <h3>インストールと基本コマンド</h3>
+  <div class="code-block">
+    <span class="comment"># インストール</span><br>
+    <span class="keyword">npm</span> install -g <span class="string">@anthropic-ai/claude-code</span><br><br>
+    <span class="comment"># 起動（プロジェクトディレクトリ内で）</span><br>
+    <span class="keyword">claude</span><br><br>
+    <span class="comment"># ワンライナーで実行</span><br>
+    <span class="keyword">claude</span> <span class="string">"このプロジェクトのREADMEを日本語で書いて"</span><br><br>
+    <span class="comment"># スラッシュコマンド</span><br>
+    <span class="func">/help</span>     <span class="comment">- ヘルプ表示</span><br>
+    <span class="func">/clear</span>    <span class="comment">- 会話をリセット</span><br>
+    <span class="func">/commit</span>   <span class="comment">- 変更をコミット</span><br>
+    <span class="func">/review-pr</span> <span class="comment">- PRをレビュー</span>
+  </div>
+
+  <h3>IDE連携</h3>
+  <p>Claude Code は VS Code や JetBrains IDE と統合して使用できます。エディタ内から直接Claudeに指示を出し、コードの修正をインラインで受け取ることが可能です。開発ワークフローに自然に組み込める設計になっています。</p>
+
+  <div class="info-box tip">
+    <span class="ib-icon">💡</span>
+    <div><strong>活用例：</strong>「このレガシーコードをTypeScriptに移行して」「パフォーマンスのボトルネックを見つけて最適化して」「E2Eテストをplaywrightで書いて」など、自然言語で複雑なタスクを依頼できます。マルチファイル編集もClaude Codeの得意分野です。</div>
+  </div>
+</div>
+
+<!-- ==================== CH9 ==================== -->
+<div class="section" id="ch9">
+  <h2><span class="icon icon-purple">🖥️</span> 第9章：Cowork モード</h2>
+  <p class="section-intro">デスクトップアプリのCoworkモードは、非開発者向けの自動化ツール。ファイル操作、ドキュメント作成、タスク管理をAIが代行します。</p>
+
+  <div class="diagram-card">
+    <svg viewBox="0 0 760 260" xmlns="http://www.w3.org/2000/svg" style="max-width:680px;width:100%;">
+      <!-- User -->
+      <circle cx="100" cy="130" r="35" fill="url(#gRed)" filter="url(#shadow1)"/>
+      <text x="100" y="126" text-anchor="middle" fill="white" font-size="22">👤</text>
+      <text x="100" y="148" text-anchor="middle" fill="rgba(255,255,255,0.9)" font-size="9" font-weight="600">ユーザー</text>
+      <text x="100" y="185" text-anchor="middle" fill="#636E72" font-size="9" font-family="Noto Sans JP">「売上レポートを</text>
+      <text x="100" y="198" text-anchor="middle" fill="#636E72" font-size="9" font-family="Noto Sans JP">PowerPointで作って」</text>
+
+      <!-- Arrow -->
+      <line x1="140" y1="130" x2="230" y2="130" stroke="#A29BFE" stroke-width="2" marker-end="url(#arrowhead)"/>
+      <defs><marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#A29BFE"/></marker></defs>
+
+      <!-- Cowork center -->
+      <rect x="240" y="60" width="180" height="140" rx="16" fill="url(#gPurple)" filter="url(#shadow1)"/>
+      <text x="330" y="100" text-anchor="middle" fill="white" font-size="16" font-weight="700" font-family="Noto Sans JP">🖥️ Cowork</text>
+      <text x="330" y="120" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="10" font-family="Noto Sans JP">Linux VM 環境</text>
+      <text x="330" y="142" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="9" font-family="Noto Sans JP">📁 ファイル操作</text>
+      <text x="330" y="158" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="9" font-family="Noto Sans JP">🔧 コード実行</text>
+      <text x="330" y="174" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="9" font-family="Noto Sans JP">🔌 MCP連携</text>
+
+      <!-- Outputs -->
+      <line x1="420" y1="100" x2="520" y2="60" stroke="#55EFC4" stroke-width="2"/>
+      <rect x="520" y="32" width="120" height="50" rx="10" fill="#E8FFF3" stroke="#00B894" stroke-width="1.5"/>
+      <text x="580" y="55" text-anchor="middle" fill="#2D3436" font-size="10" font-weight="600" font-family="Noto Sans JP">📊 PPTX生成</text>
+      <text x="580" y="72" text-anchor="middle" fill="#636E72" font-size="8" font-family="Noto Sans JP">スライド自動作成</text>
+
+      <line x1="420" y1="130" x2="520" y2="130" stroke="#74B9FF" stroke-width="2"/>
+      <rect x="520" y="106" width="120" height="50" rx="10" fill="#F0F3FF" stroke="#0984E3" stroke-width="1.5"/>
+      <text x="580" y="129" text-anchor="middle" fill="#2D3436" font-size="10" font-weight="600" font-family="Noto Sans JP">📄 DOCX/PDF</text>
+      <text x="580" y="146" text-anchor="middle" fill="#636E72" font-size="8" font-family="Noto Sans JP">ドキュメント生成</text>
+
+      <line x1="420" y1="160" x2="520" y2="200" stroke="#FFA8A8" stroke-width="2"/>
+      <rect x="520" y="178" width="120" height="50" rx="10" fill="#FFF0F0" stroke="#FF6B6B" stroke-width="1.5"/>
+      <text x="580" y="201" text-anchor="middle" fill="#2D3436" font-size="10" font-weight="600" font-family="Noto Sans JP">📈 XLSX分析</text>
+      <text x="580" y="218" text-anchor="middle" fill="#636E72" font-size="8" font-family="Noto Sans JP">データ処理・集計</text>
+    </svg>
+    <div class="caption">図9-1：Cowork モードのワークフロー — 自然言語の指示からファイルを自動生成</div>
+  </div>
+
+  <h3>Cowork でできること</h3>
+  <p>Cowork モードは Claudeデスクトップアプリの機能で、軽量なLinux VM上でClaudeが動作します。ユーザーのコンピュータ上のフォルダにアクセスし、実際にファイルを作成・編集・管理できるのが最大の特徴です。</p>
+
+  <p>たとえば「このフォルダのCSVファイルを分析してExcelレポートにまとめて」「プレゼン資料を10枚のスライドで作って」「アップロードしたPDFの内容を要約してWordにまとめて」といった指示を出すと、Claudeが自動的にコードを実行してファイルを生成し、あなたのフォルダに保存します。</p>
+
+  <h3>外部サービス連携（MCP）</h3>
+  <p>Cowork モードでは MCP（Model Context Protocol）を通じて外部サービスとも連携できます。Gmail、Googleカレンダー、Notion、Slack、Google Drive、Figma、Canva などのサービスと接続し、「今週のカレンダーを確認して」「Notionのタスクリストを更新して」「Gmailの未読を要約して」といった操作が可能です。</p>
+
+  <div class="info-box note">
+    <span class="ib-icon">📌</span>
+    <div><strong>Cowork は現在リサーチプレビュー：</strong>機能は日々改善されています。フィードバックを送ることで、今後のアップデートに反映されます。デスクトップアプリの「Cowork」タブから利用できます。</div>
+  </div>
+</div>
+
+<!-- ==================== CH10 ==================== -->
+<div class="section" id="ch10">
+  <h2><span class="icon icon-orange">🔌</span> 第10章：API ＆ 開発者向け機能</h2>
+  <p class="section-intro">Claude APIを使えば、自社のアプリやサービスにClaudeの知能を組み込むことができます。チャットボット、コンテンツ生成、データ分析など、あらゆるユースケースに対応。</p>
+
+  <h3>API の基本構造</h3>
+  <div class="code-block">
+    <span class="comment"># Python SDK を使った基本的なAPI呼び出し</span><br>
+    <span class="keyword">import</span> anthropic<br><br>
+    client = anthropic.<span class="func">Anthropic</span>(<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;api_key=<span class="string">"your-api-key"</span><br>
+    )<br><br>
+    message = client.messages.<span class="func">create</span>(<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;model=<span class="string">"claude-sonnet-4-6"</span>,<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;max_tokens=<span class="string">1024</span>,<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;messages=[<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<span class="string">"role"</span>: <span class="string">"user"</span>, <span class="string">"content"</span>: <span class="string">"日本の首都は？"</span>}<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;]<br>
+    )<br>
+    <span class="keyword">print</span>(message.content[0].text)
+  </div>
+
+  <h3>主要なAPI機能</h3>
+  <table class="styled-table">
+    <thead>
+      <tr><th>機能</th><th>説明</th><th>用途</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Messages API</strong></td><td>テキスト生成の基本エンドポイント</td><td>チャットボット、文章生成全般</td></tr>
+      <tr><td><strong>Vision（画像入力）</strong></td><td>画像をbase64またはURLで送信</td><td>OCR、画像分析、図表読み取り</td></tr>
+      <tr><td><strong>Tool Use</strong></td><td>外部関数を呼び出す機能</td><td>検索連携、DB操作、計算処理</td></tr>
+      <tr><td><strong>Streaming</strong></td><td>レスポンスをリアルタイムで受信</td><td>チャットUI、ライブ表示</td></tr>
+      <tr><td><strong>Batches API</strong></td><td>大量リクエストを非同期で一括処理</td><td>データ加工、翻訳バッチ処理</td></tr>
+      <tr><td><strong>Extended Thinking</strong></td><td>複雑な推論の思考プロセスを公開</td><td>数学、分析、デバッグ</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Tool Use（関数呼び出し）の仕組み</h3>
+  <div class="diagram-card">
+    <svg viewBox="0 0 760 180" xmlns="http://www.w3.org/2000/svg" style="max-width:680px;width:100%;">
+      <rect x="30" y="50" width="130" height="70" rx="12" fill="url(#gBlue)" filter="url(#shadow1)"/>
+      <text x="95" y="80" text-anchor="middle" fill="white" font-size="12" font-weight="600" font-family="Noto Sans JP">👤 ユーザー</text>
+      <text x="95" y="100" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="9" font-family="Noto Sans JP">「東京の天気は？」</text>
+
+      <line x1="160" y1="85" x2="220" y2="85" stroke="#74B9FF" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+      <rect x="220" y="40" width="140" height="90" rx="12" fill="url(#gPurple)" filter="url(#shadow1)"/>
+      <text x="290" y="70" text-anchor="middle" fill="white" font-size="12" font-weight="600" font-family="Noto Sans JP">🧠 Claude API</text>
+      <text x="290" y="90" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="9" font-family="Noto Sans JP">Tool Useを判断</text>
+      <text x="290" y="106" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="8" font-family="Noto Sans JP">get_weather(tokyo)</text>
+
+      <line x1="360" y1="65" x2="430" y2="50" stroke="#55EFC4" stroke-width="2" marker-end="url(#arrowhead)"/>
+      <line x1="430" y1="50" x2="360" y2="110" stroke="#FDCB6E" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#arrowhead)"/>
+
+      <rect x="430" y="20" width="140" height="60" rx="10" fill="#E8FFF3" stroke="#00B894" stroke-width="1.5"/>
+      <text x="500" y="46" text-anchor="middle" fill="#2D3436" font-size="11" font-weight="600" font-family="Noto Sans JP">🌤️ 天気API</text>
+      <text x="500" y="66" text-anchor="middle" fill="#636E72" font-size="9" font-family="Noto Sans JP">晴れ・23℃を返却</text>
+
+      <line x1="290" y1="132" x2="290" y2="160" stroke="#A29BFE" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+      <rect x="220" y="142" width="340" height="35" rx="8" fill="#F0F3FF" stroke="#A29BFE" stroke-width="1"/>
+      <text x="390" y="164" text-anchor="middle" fill="#2D3436" font-size="10" font-family="Noto Sans JP">💬 「東京の天気は晴れ、気温23℃です。紫外線にご注意ください。」</text>
+    </svg>
+    <div class="caption">図10-1：Tool Use の動作フロー — Claudeが外部APIを自動で呼び出して結果を統合</div>
+  </div>
+
+  <div class="info-box tip">
+    <span class="ib-icon">💡</span>
+    <div><strong>開発者向けTips：</strong>APIキーは console.anthropic.com で発行できます。無料クレジットで試用も可能。SDK は Python、TypeScript/Node.js に対応しています。Rate Limitに注意し、バッチ処理が可能な場面では Batches API を活用するとコスト削減になります。</div>
+  </div>
+</div>
+
+<!-- ==================== CH11 ==================== -->
+<div class="section" id="ch11">
+  <h2><span class="icon icon-teal">🔗</span> 第11章：MCP（Model Context Protocol）</h2>
+  <p class="section-intro">MCPは、Claudeと外部のツール・データソースを標準化された方法で接続するプロトコルです。「AIのUSBポート」とも呼ばれています。</p>
+
+  <div class="diagram-card">
+    <svg viewBox="0 0 760 300" xmlns="http://www.w3.org/2000/svg" style="max-width:700px;width:100%;">
+      <!-- Claude center -->
+      <circle cx="380" cy="150" r="55" fill="url(#gPurple)" filter="url(#shadow1)"/>
+      <text x="380" y="145" text-anchor="middle" fill="white" font-size="18" font-weight="700" font-family="Noto Sans JP">Claude</text>
+      <text x="380" y="165" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="10" font-family="Noto Sans JP">MCP Host</text>
+
+      <!-- Connections -->
+      <line x1="330" y1="110" x2="170" y2="50" stroke="#74B9FF" stroke-width="2"/>
+      <rect x="80" y="22" width="120" height="52" rx="10" fill="white" stroke="#0984E3" stroke-width="1.5" filter="url(#shadow1)"/>
+      <text x="140" y="44" text-anchor="middle" fill="#0984E3" font-size="11" font-weight="600" font-family="Noto Sans JP">📧 Gmail</text>
+      <text x="140" y="62" text-anchor="middle" fill="#636E72" font-size="8" font-family="Noto Sans JP">メール送受信</text>
+
+      <line x1="430" y1="110" x2="590" y2="50" stroke="#55EFC4" stroke-width="2"/>
+      <rect x="530" y="22" width="120" height="52" rx="10" fill="white" stroke="#00B894" stroke-width="1.5" filter="url(#shadow1)"/>
+      <text x="590" y="44" text-anchor="middle" fill="#00B894" font-size="11" font-weight="600" font-family="Noto Sans JP">📅 Calendar</text>
+      <text x="590" y="62" text-anchor="middle" fill="#636E72" font-size="8" font-family="Noto Sans JP">予定管理</text>
+
+      <line x1="325" y1="155" x2="140" y2="155" stroke="#FFA8A8" stroke-width="2"/>
+      <rect x="50" y="128" width="120" height="52" rx="10" fill="white" stroke="#FF6B6B" stroke-width="1.5" filter="url(#shadow1)"/>
+      <text x="110" y="150" text-anchor="middle" fill="#FF6B6B" font-size="11" font-weight="600" font-family="Noto Sans JP">📝 Notion</text>
+      <text x="110" y="168" text-anchor="middle" fill="#636E72" font-size="8" font-family="Noto Sans JP">ドキュメント管理</text>
+
+      <line x1="435" y1="155" x2="620" y2="155" stroke="#FDCB6E" stroke-width="2"/>
+      <rect x="590" y="128" width="120" height="52" rx="10" fill="white" stroke="#E17055" stroke-width="1.5" filter="url(#shadow1)"/>
+      <text x="650" y="150" text-anchor="middle" fill="#E17055" font-size="11" font-weight="600" font-family="Noto Sans JP">💬 Slack</text>
+      <text x="650" y="168" text-anchor="middle" fill="#636E72" font-size="8" font-family="Noto Sans JP">チーム連絡</text>
+
+      <line x1="330" y1="190" x2="170" y2="250" stroke="#A29BFE" stroke-width="2"/>
+      <rect x="80" y="224" width="120" height="52" rx="10" fill="white" stroke="#6C5CE7" stroke-width="1.5" filter="url(#shadow1)"/>
+      <text x="140" y="246" text-anchor="middle" fill="#6C5CE7" font-size="11" font-weight="600" font-family="Noto Sans JP">📁 Google Drive</text>
+      <text x="140" y="264" text-anchor="middle" fill="#636E72" font-size="8" font-family="Noto Sans JP">ファイル管理</text>
+
+      <line x1="430" y1="190" x2="590" y2="250" stroke="#A29BFE" stroke-width="2"/>
+      <rect x="530" y="224" width="120" height="52" rx="10" fill="white" stroke="#6C5CE7" stroke-width="1.5" filter="url(#shadow1)"/>
+      <text x="590" y="246" text-anchor="middle" fill="#6C5CE7" font-size="11" font-weight="600" font-family="Noto Sans JP">🎨 Figma</text>
+      <text x="590" y="264" text-anchor="middle" fill="#636E72" font-size="8" font-family="Noto Sans JP">デザイン連携</text>
+
+      <line x1="380" y1="205" x2="380" y2="260" stroke="#A29BFE" stroke-width="2"/>
+      <rect x="320" y="260" width="120" height="36" rx="8" fill="#F0F3FF" stroke="#A29BFE" stroke-width="1"/>
+      <text x="380" y="283" text-anchor="middle" fill="#6C5CE7" font-size="10" font-weight="600" font-family="Noto Sans JP">＋ 他にも多数...</text>
+    </svg>
+    <div class="caption">図11-1：MCP接続マップ — Claudeから様々な外部サービスにシームレスに接続</div>
+  </div>
+
+  <h3>MCPの仕組み</h3>
+  <p>MCP（Model Context Protocol）は、Anthropicが提唱するオープン標準プロトコルです。AIモデルと外部のデータソース・ツールを接続するための統一インターフェースを定義しています。従来、各サービスごとに個別のAPI連携コードを書く必要がありましたが、MCPを使えば標準化された方法で「プラグイン」のように接続できます。</p>
+
+  <p>MCPサーバーは「ツール」「リソース」「プロンプト」の3種類の機能を公開できます。たとえばGmail MCPサーバーは「メール送信」「メール検索」「下書き作成」などのツールを提供し、Claudeはこれらのツールをユーザーの指示に応じて自動的に選択・実行します。</p>
+
+  <h3>対応サービス例</h3>
+  <div class="feature-grid">
+    <div class="feature-card">
+      <div class="fc-icon icon-blue">📧</div>
+      <h4>Gmail</h4>
+      <p>メールの読み取り、検索、下書き作成。「未読メールを要約して」で瞬時に対応。</p>
+    </div>
+    <div class="feature-card">
+      <div class="fc-icon icon-teal">📅</div>
+      <h4>Google Calendar</h4>
+      <p>予定の確認、作成、変更。空き時間の検索や会議調整も自動化。</p>
+    </div>
+    <div class="feature-card">
+      <div class="fc-icon icon-orange">📝</div>
+      <h4>Notion</h4>
+      <p>ページの作成・更新、データベース検索、コメント追加。ナレッジ管理を効率化。</p>
+    </div>
+    <div class="feature-card">
+      <div class="fc-icon icon-purple">🎨</div>
+      <h4>Figma / Canva</h4>
+      <p>デザインファイルの読み取り、スクリーンショット取得、デザイン生成。</p>
+    </div>
+  </div>
+
+  <div class="info-box note">
+    <span class="ib-icon">📌</span>
+    <div><strong>プラグインで簡単追加：</strong>Cowork モードでは「プラグイン」として MCP サーバーをワンクリックで追加できます。マーケットプレイスから欲しいサービスのプラグインを探してインストールするだけです。</div>
+  </div>
+</div>
+
+<!-- ==================== CH12 ==================== -->
+<div class="section" id="ch12">
+  <h2><span class="icon icon-pink">💳</span> 第12章：料金プラン比較</h2>
+  <p class="section-intro">個人からエンタープライズまで、用途に合わせた4つのプランが用意されています。</p>
+
+  <table class="styled-table">
+    <thead>
+      <tr><th>項目</th><th>Free</th><th>Pro</th><th>Team</th><th>Enterprise</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>月額料金</strong></td><td>$0</td><td>$20/月</td><td>$30/人/月</td><td>カスタム</td></tr>
+      <tr><td><strong>使用モデル</strong></td><td>Sonnet</td><td>全モデル</td><td>全モデル</td><td>全モデル</td></tr>
+      <tr><td><strong>メッセージ量</strong></td><td>制限あり</td><td>5倍以上</td><td>多め</td><td>カスタム</td></tr>
+      <tr><td><strong>プロジェクト</strong></td><td>制限あり</td><td>無制限</td><td>無制限</td><td>無制限</td></tr>
+      <tr><td><strong>ファイルアップロード</strong></td><td>基本的</td><td>拡張</td><td>拡張</td><td>拡張</td></tr>
+      <tr><td><strong>Web検索</strong></td><td>あり</td><td>あり</td><td>あり</td><td>あり</td></tr>
+      <tr><td><strong>優先アクセス</strong></td><td>なし</td><td>あり</td><td>あり</td><td>最優先</td></tr>
+      <tr><td><strong>管理機能</strong></td><td>なし</td><td>なし</td><td>チーム管理</td><td>SSO / SCIM</td></tr>
+      <tr><td><strong>データ保持</strong></td><td>標準</td><td>標準</td><td>拡張制御</td><td>完全制御</td></tr>
+    </tbody>
+  </table>
+
+  <div class="diagram-card">
+    <svg viewBox="0 0 760 160" xmlns="http://www.w3.org/2000/svg" style="max-width:700px;width:100%;">
+      <!-- Free -->
+      <rect x="20" y="20" width="165" height="120" rx="14" fill="white" stroke="#DFE6E9" stroke-width="2"/>
+      <text x="102" y="48" text-anchor="middle" fill="#636E72" font-size="13" font-weight="700" font-family="Noto Sans JP">Free</text>
+      <text x="102" y="72" text-anchor="middle" fill="#2D3436" font-size="20" font-weight="900">$0</text>
+      <text x="102" y="95" text-anchor="middle" fill="#636E72" font-size="9" font-family="Noto Sans JP">個人利用のお試しに</text>
+      <text x="102" y="115" text-anchor="middle" fill="#636E72" font-size="9" font-family="Noto Sans JP">Sonnetが使える</text>
+      <text x="102" y="132" text-anchor="middle" fill="#00B894" font-size="10" font-weight="600" font-family="Noto Sans JP">🆓 無料で始める</text>
+
+      <!-- Pro -->
+      <rect x="205" y="10" width="165" height="135" rx="14" fill="url(#gPurple)" filter="url(#shadow1)"/>
+      <text x="287" y="35" text-anchor="middle" fill="rgba(255,255,255,0.9)" font-size="9" font-weight="600">⭐ POPULAR</text>
+      <text x="287" y="58" text-anchor="middle" fill="white" font-size="13" font-weight="700" font-family="Noto Sans JP">Pro</text>
+      <text x="287" y="82" text-anchor="middle" fill="white" font-size="20" font-weight="900">$20<tspan font-size="10">/月</tspan></text>
+      <text x="287" y="105" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="9" font-family="Noto Sans JP">全モデル＋大容量</text>
+      <text x="287" y="122" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="9" font-family="Noto Sans JP">Opusも使い放題</text>
+      <text x="287" y="139" text-anchor="middle" fill="white" font-size="10" font-weight="600" font-family="Noto Sans JP">🚀 おすすめ</text>
+
+      <!-- Team -->
+      <rect x="390" y="20" width="165" height="120" rx="14" fill="white" stroke="#0984E3" stroke-width="2"/>
+      <text x="472" y="48" text-anchor="middle" fill="#0984E3" font-size="13" font-weight="700" font-family="Noto Sans JP">Team</text>
+      <text x="472" y="72" text-anchor="middle" fill="#2D3436" font-size="20" font-weight="900">$30<tspan font-size="10">/人/月</tspan></text>
+      <text x="472" y="95" text-anchor="middle" fill="#636E72" font-size="9" font-family="Noto Sans JP">チーム管理機能つき</text>
+      <text x="472" y="115" text-anchor="middle" fill="#636E72" font-size="9" font-family="Noto Sans JP">共有プロジェクト対応</text>
+      <text x="472" y="132" text-anchor="middle" fill="#0984E3" font-size="10" font-weight="600" font-family="Noto Sans JP">👥 チーム向け</text>
+
+      <!-- Enterprise -->
+      <rect x="575" y="20" width="165" height="120" rx="14" fill="white" stroke="#2D3436" stroke-width="2"/>
+      <text x="657" y="48" text-anchor="middle" fill="#2D3436" font-size="13" font-weight="700" font-family="Noto Sans JP">Enterprise</text>
+      <text x="657" y="72" text-anchor="middle" fill="#2D3436" font-size="16" font-weight="900">カスタム</text>
+      <text x="657" y="95" text-anchor="middle" fill="#636E72" font-size="9" font-family="Noto Sans JP">SSO / SCIM対応</text>
+      <text x="657" y="115" text-anchor="middle" fill="#636E72" font-size="9" font-family="Noto Sans JP">完全なデータ制御</text>
+      <text x="657" y="132" text-anchor="middle" fill="#2D3436" font-size="10" font-weight="600" font-family="Noto Sans JP">🏢 大規模組織向け</text>
+    </svg>
+    <div class="caption">図12-1：料金プラン一覧 — 個人利用ならPro、チームならTeamがおすすめ</div>
+  </div>
+
+  <div class="info-box tip">
+    <span class="ib-icon">💡</span>
+    <div><strong>プラン選びのポイント：</strong>まずは無料プランで試してみて、メッセージ制限に達するようであれば Pro にアップグレード。チームで共有プロジェクトを使いたい場合は Team、セキュリティ要件が厳格な企業には Enterprise がおすすめです。最新の料金は claude.ai で確認してください。</div>
+  </div>
+</div>
+
+<!-- ==================== CH13 ==================== -->
+<div class="section" id="ch13">
+  <h2><span class="icon icon-dark">🔒</span> 第13章：セキュリティ ＆ プライバシー</h2>
+  <p class="section-intro">Anthropicはユーザーのデータ保護を最優先に設計。安心して業務に使える堅牢なセキュリティ体制を整えています。</p>
+
+  <h3>データの取り扱い</h3>
+  <p>Claudeとの会話データがどう扱われるかは、利用プランによって異なります。基本的な原則として、APIおよびTeam/Enterpriseプランでは、ユーザーデータはモデルのトレーニングに使用されません。Freeプランでは、サービス改善のために匿名化された形でデータが使われる可能性がありますが、オプトアウトも可能です。</p>
+
+  <div class="diagram-card">
+    <svg viewBox="0 0 760 200" xmlns="http://www.w3.org/2000/svg" style="max-width:680px;width:100%;">
+      <!-- Shield -->
+      <path d="M380 20 L430 40 L430 100 C430 140 380 170 380 170 C380 170 330 140 330 100 L330 40 Z" fill="url(#gPurple)" filter="url(#shadow1)"/>
+      <text x="380" y="85" text-anchor="middle" fill="white" font-size="28">🛡️</text>
+      <text x="380" y="115" text-anchor="middle" fill="white" font-size="10" font-weight="600">セキュリティ</text>
+
+      <!-- Left items -->
+      <line x1="328" y1="70" x2="210" y2="40" stroke="#A29BFE" stroke-width="1.5"/>
+      <rect x="80" y="20" width="150" height="40" rx="8" fill="#F0F3FF" stroke="#A29BFE" stroke-width="1"/>
+      <text x="155" y="45" text-anchor="middle" fill="#2D3436" font-size="10" font-weight="500" font-family="Noto Sans JP">🔐 通信の暗号化（TLS）</text>
+
+      <line x1="328" y1="95" x2="210" y2="95" stroke="#A29BFE" stroke-width="1.5"/>
+      <rect x="80" y="76" width="150" height="40" rx="8" fill="#F0F3FF" stroke="#A29BFE" stroke-width="1"/>
+      <text x="155" y="101" text-anchor="middle" fill="#2D3436" font-size="10" font-weight="500" font-family="Noto Sans JP">🗑️ データ保持期間の管理</text>
+
+      <line x1="328" y1="120" x2="210" y2="150" stroke="#A29BFE" stroke-width="1.5"/>
+      <rect x="80" y="132" width="150" height="40" rx="8" fill="#F0F3FF" stroke="#A29BFE" stroke-width="1"/>
+      <text x="155" y="157" text-anchor="middle" fill="#2D3436" font-size="10" font-weight="500" font-family="Noto Sans JP">🚫 学習への不使用</text>
+
+      <!-- Right items -->
+      <line x1="432" y1="70" x2="550" y2="40" stroke="#A29BFE" stroke-width="1.5"/>
+      <rect x="530" y="20" width="150" height="40" rx="8" fill="#E8FFF3" stroke="#00B894" stroke-width="1"/>
+      <text x="605" y="45" text-anchor="middle" fill="#2D3436" font-size="10" font-weight="500" font-family="Noto Sans JP">✅ SOC 2 Type II 認証</text>
+
+      <line x1="432" y1="95" x2="550" y2="95" stroke="#A29BFE" stroke-width="1.5"/>
+      <rect x="530" y="76" width="150" height="40" rx="8" fill="#E8FFF3" stroke="#00B894" stroke-width="1"/>
+      <text x="605" y="101" text-anchor="middle" fill="#2D3436" font-size="10" font-weight="500" font-family="Noto Sans JP">✅ GDPR 準拠</text>
+
+      <line x1="432" y1="120" x2="550" y2="150" stroke="#A29BFE" stroke-width="1.5"/>
+      <rect x="530" y="132" width="150" height="40" rx="8" fill="#E8FFF3" stroke="#00B894" stroke-width="1"/>
+      <text x="605" y="157" text-anchor="middle" fill="#2D3436" font-size="10" font-weight="500" font-family="Noto Sans JP">✅ SSO / SCIM 対応</text>
+    </svg>
+    <div class="caption">図13-1：セキュリティ体制の全体像 — 暗号化・認証・コンプライアンスの三位一体</div>
+  </div>
+
+  <h3>安全性への取り組み</h3>
+  <p>Anthropicは「Constitutional AI」と呼ばれる独自の手法でClaudeの安全性を担保しています。これは、AIに明文化されたルール（憲法）を与え、それに基づいて自己評価・自己修正を行う仕組みです。有害なコンテンツの生成を防ぎつつ、有用な回答を最大化するバランスを追求しています。</p>
+
+  <p>また、ユーザーの指示が倫理的に問題のある場合は、Claudeは丁寧に断る設計になっています。「わからないことはわからない」と正直に答え、不確実な情報を確信的に述べることを避けます。この誠実さが、ビジネスシーンでの信頼につながっています。</p>
+
+  <div class="info-box warn">
+    <span class="ib-icon">⚠️</span>
+    <div><strong>重要：</strong>機密情報（パスワード、APIキー、個人情報など）はチャットに入力しないようにしてください。特にFreeプランでは、データがサービス改善に使われる可能性があります。業務で機密情報を扱う場合はTeamまたはEnterpriseプランの利用を推奨します。</div>
+  </div>
+</div>
+
+<!-- ==================== CH14 ==================== -->
+<div class="section" id="ch14">
+  <h2><span class="icon icon-red">🎯</span> 第14章：活用Tips ＆ 便利テクニック</h2>
+  <p class="section-intro">Claudeの力を最大限引き出すための実践的なテクニック集。これを知っているかどうかで、出力品質が劇的に変わります。</p>
+
+  <h3>プロンプトエンジニアリングの基本</h3>
+  <p>Claudeに的確な回答をもらうための最も重要なスキルが「プロンプトエンジニアリング」です。同じ質問でも、聞き方を変えるだけで回答の質が大きく変わります。以下の原則を押さえておけば、プロ並みのプロンプトが書けるようになります。</p>
+
+  <div class="diagram-card">
+    <svg viewBox="0 0 760 320" xmlns="http://www.w3.org/2000/svg" style="max-width:700px;width:100%;">
+      <!-- Title -->
+      <text x="380" y="28" text-anchor="middle" fill="#2D3436" font-size="15" font-weight="700" font-family="Noto Sans JP">🎯 プロンプト品質向上の5原則</text>
+
+      <!-- 1 -->
+      <rect x="30" y="50" width="340" height="55" rx="10" fill="#F0F3FF" stroke="#6C5CE7" stroke-width="1.5"/>
+      <circle cx="58" cy="77" r="16" fill="url(#gPurple)"/>
+      <text x="58" y="82" text-anchor="middle" fill="white" font-size="12" font-weight="700">1</text>
+      <text x="84" y="71" fill="#2D3436" font-size="11" font-weight="600" font-family="Noto Sans JP">具体的に指示する</text>
+      <text x="84" y="90" fill="#636E72" font-size="9" font-family="Noto Sans JP">❌「記事を書いて」→ ✅「20代向け美容ブログ、2000字、3見出し」</text>
+
+      <!-- 2 -->
+      <rect x="390" y="50" width="340" height="55" rx="10" fill="#E8FFF3" stroke="#00B894" stroke-width="1.5"/>
+      <circle cx="418" cy="77" r="16" fill="url(#gTeal)"/>
+      <text x="418" y="82" text-anchor="middle" fill="white" font-size="12" font-weight="700">2</text>
+      <text x="444" y="71" fill="#2D3436" font-size="11" font-weight="600" font-family="Noto Sans JP">役割を与える</text>
+      <text x="444" y="90" fill="#636E72" font-size="9" font-family="Noto Sans JP">「あなたはシニアデータサイエンティストです」で専門性UP</text>
+
+      <!-- 3 -->
+      <rect x="30" y="118" width="340" height="55" rx="10" fill="#FFF8E1" stroke="#FDCB6E" stroke-width="1.5"/>
+      <circle cx="58" cy="145" r="16" fill="url(#gOrange)"/>
+      <text x="58" y="150" text-anchor="middle" fill="white" font-size="12" font-weight="700">3</text>
+      <text x="84" y="139" fill="#2D3436" font-size="11" font-weight="600" font-family="Noto Sans JP">例を示す（Few-shot）</text>
+      <text x="84" y="158" fill="#636E72" font-size="9" font-family="Noto Sans JP">望む出力形式の具体例を1-2個添えると精度が飛躍的に向上</text>
+
+      <!-- 4 -->
+      <rect x="390" y="118" width="340" height="55" rx="10" fill="#FFF0F0" stroke="#FF6B6B" stroke-width="1.5"/>
+      <circle cx="418" cy="145" r="16" fill="url(#gRed)"/>
+      <text x="418" y="150" text-anchor="middle" fill="white" font-size="12" font-weight="700">4</text>
+      <text x="444" y="139" fill="#2D3436" font-size="11" font-weight="600" font-family="Noto Sans JP">ステップ分割で考えさせる</text>
+      <text x="444" y="158" fill="#636E72" font-size="9" font-family="Noto Sans JP">「まず○○を分析、次に△△を提案、最後に□□にまとめて」</text>
+
+      <!-- 5 -->
+      <rect x="210" y="186" width="340" height="55" rx="10" fill="#F0F3FF" stroke="#0984E3" stroke-width="1.5"/>
+      <circle cx="238" cy="213" r="16" fill="url(#gBlue)"/>
+      <text x="238" y="218" text-anchor="middle" fill="white" font-size="12" font-weight="700">5</text>
+      <text x="264" y="207" fill="#2D3436" font-size="11" font-weight="600" font-family="Noto Sans JP">出力形式を指定する</text>
+      <text x="264" y="226" fill="#636E72" font-size="9" font-family="Noto Sans JP">「JSON形式で」「表形式で」「マークダウンで」→ 後処理しやすい</text>
+
+      <!-- Bottom box -->
+      <rect x="160" y="258" width="440" height="48" rx="12" fill="url(#gPurple)" filter="url(#shadow1)"/>
+      <text x="380" y="280" text-anchor="middle" fill="white" font-size="11" font-weight="600" font-family="Noto Sans JP">📖 詳細: docs.claude.com/prompt-engineering/overview</text>
+      <text x="380" y="297" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="9" font-family="Noto Sans JP">Anthropic公式のプロンプトガイドで更に深く学べます</text>
+    </svg>
+    <div class="caption">図14-1：プロンプト品質向上の5原則 — これだけ覚えれば回答の質が劇的に向上</div>
+  </div>
+
+  <h3>知っておくと便利なテクニック</h3>
+  <table class="styled-table">
+    <thead>
+      <tr><th>テクニック</th><th>説明</th><th>具体例</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>XMLタグ活用</strong></td><td>構造化された入力をタグで区切る</td><td>&lt;context&gt;背景情報&lt;/context&gt;で情報を整理</td></tr>
+      <tr><td><strong>チェーン思考</strong></td><td>推論過程を段階的に出力させる</td><td>「ステップバイステップで考えて」と指示</td></tr>
+      <tr><td><strong>ネガティブ指示</strong></td><td>やってほしくないことも明示</td><td>「専門用語は使わないで」「3段落以内で」</td></tr>
+      <tr><td><strong>反復改善</strong></td><td>一度の回答で終わらず対話で磨く</td><td>「もう少しカジュアルに」「具体例を追加して」</td></tr>
+      <tr><td><strong>ペルソナ設定</strong></td><td>読者像を明示して的確な表現に</td><td>「読者はIT初心者の50代経営者です」</td></tr>
+      <tr><td><strong>制約付与</strong></td><td>制限を設けて集中させる</td><td>「300字以内」「箇条書き5つ」「比喩を使って」</td></tr>
+    </tbody>
+  </table>
+
+  <h3>シーン別の活用例</h3>
+  <div class="feature-grid">
+    <div class="feature-card">
+      <div class="fc-icon icon-purple">💼</div>
+      <h4>ビジネス</h4>
+      <p>議事録の要約、プレゼン資料作成、市場調査レポート、競合分析、メール下書き、契約書チェック。</p>
+    </div>
+    <div class="feature-card">
+      <div class="fc-icon icon-blue">📚</div>
+      <h4>学習・教育</h4>
+      <p>概念の解説、練習問題の作成、論文の要約、外国語の学習サポート、プログラミング学習。</p>
+    </div>
+    <div class="feature-card">
+      <div class="fc-icon icon-teal">🎨</div>
+      <h4>クリエイティブ</h4>
+      <p>ブログ記事、SNS投稿、小説の構成、広告コピー、キャッチフレーズ、動画台本の執筆。</p>
+    </div>
+    <div class="feature-card">
+      <div class="fc-icon icon-orange">🔧</div>
+      <h4>開発・技術</h4>
+      <p>コード生成、デバッグ、テスト作成、アーキテクチャ設計、ドキュメント自動生成、CI/CD構築。</p>
+    </div>
+  </div>
+
+  <div class="info-box tip">
+    <span class="ib-icon">💡</span>
+    <div><strong>上級テクニック：</strong>プロジェクト機能のカスタム指示に「あなたは○○の専門家として振る舞い、常に△△の観点を考慮して回答してください」と設定しておけば、毎回の指示が大幅に短縮できます。よく使うプロンプトテンプレートはプロジェクトのナレッジに登録しておくのがおすすめです。</div>
+  </div>
+</div>
+
+<!-- ==================== APPENDIX ==================== -->
+<div class="section">
+  <h2><span class="icon icon-purple">📋</span> 付録：キーボードショートカット＆便利リンク</h2>
+
+  <h3>claude.ai のショートカットキー</h3>
+  <table class="styled-table">
+    <thead>
+      <tr><th>操作</th><th>ショートカット</th><th>説明</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>新しいチャット</td><td><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>O</kbd></td><td>新規チャットを素早く開始</td></tr>
+      <tr><td>チャット検索</td><td><kbd>Ctrl</kbd> + <kbd>K</kbd></td><td>過去のチャットを検索</td></tr>
+      <tr><td>送信</td><td><kbd>Enter</kbd></td><td>メッセージを送信</td></tr>
+      <tr><td>改行</td><td><kbd>Shift</kbd> + <kbd>Enter</kbd></td><td>メッセージ内で改行</td></tr>
+      <tr><td>コピー</td><td>回答の「コピー」ボタン</td><td>Claude の回答をコピー</td></tr>
+      <tr><td>再生成</td><td>回答の「再生成」ボタン</td><td>別の回答を生成</td></tr>
+    </tbody>
+  </table>
+
+  <h3>便利リンク集</h3>
+  <div class="feature-grid">
+    <div class="feature-card">
+      <div class="fc-icon icon-purple">🌐</div>
+      <h4>claude.ai</h4>
+      <p>Webチャットのメインインターフェース。ブラウザから直接利用。</p>
+    </div>
+    <div class="feature-card">
+      <div class="fc-icon icon-blue">📖</div>
+      <h4>docs.claude.com</h4>
+      <p>公式ドキュメント。API リファレンス、ガイド、チュートリアル。</p>
+    </div>
+    <div class="feature-card">
+      <div class="fc-icon icon-teal">💬</div>
+      <h4>support.claude.com</h4>
+      <p>サポート・ヘルプセンター。FAQ、トラブルシューティング。</p>
+    </div>
+    <div class="feature-card">
+      <div class="fc-icon icon-orange">🔧</div>
+      <h4>console.anthropic.com</h4>
+      <p>API管理コンソール。APIキー発行、使用量確認、プレイグラウンド。</p>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== FOOTER ==================== -->
+<div class="footer">
+  <p><strong>Claude 完全解説マニュアル 2026年3月版</strong></p>
+  <p>Anthropic の Claude AI アシスタント — 全機能図解ガイド</p>
+  <p style="margin-top:12px;font-size:0.8em;color:#aaa;">※ 本マニュアルの情報は2026年3月時点のものです。最新情報は公式サイトをご確認ください。</p>
+  <p style="font-size:0.8em;color:#aaa;">Generated with Claude</p>
+</div>
+
+</div><!-- container -->
+</body>
+</html>
